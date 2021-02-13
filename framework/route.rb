@@ -10,7 +10,7 @@ class Route
     @action = action
   end
 
-  def matchs?(request)
+  def matches?(request)
     request_path = request.path_info.delete_prefix('/')
 
     # if not the same method, return false.
@@ -18,15 +18,18 @@ class Route
     # if not the same path pattern, return false.
     return false unless same_pattern?(request_path)
 
-    # otherwise, extract_path_params and return true.
-    @path_params = extract_path_params(request_path)
-
     true
   end
 
-  def path_params
-    @path_params || {}
+  def path_params(request)
+    return @path_params if @path_params
+
+    request_path = request.path_info.delete_prefix('/')
+
+    @path_params = extract_path_params(request_path)
   end
+
+  private
 
   def same_pattern?(request_path)
     request_path_segements = request_path.split('/')

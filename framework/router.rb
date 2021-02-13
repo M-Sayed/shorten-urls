@@ -31,11 +31,11 @@ class Router
   end
 
   def resolve
-    route = ROUTES.find { |route| route.matchs?(request) }
+    route = ROUTES.find { |r| r.matches?(request) }
 
     return nil unless route
 
-    [Object.const_get(route.controller), route.action, route.path_params]
+    [Object.const_get(route.controller), route.action, route.path_params(request)]
   end
 
   private
