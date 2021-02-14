@@ -5,14 +5,14 @@ source 'https://rubygems.org'
 ruby '2.7.1'
 
 gem 'rack'
-gem 'thin'
 gem 'redis'
+gem 'thin'
 
 group :development, :test do
   gem 'byebug'
-  gem 'rubocop'
   gem 'guard'
   gem 'guard-rack'
+  gem 'rubocop', require: false
 end
 
 group :test do
