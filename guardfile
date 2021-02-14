@@ -1,0 +1,9 @@
+guard 'bundler' do
+  watch('Gemfile')
+end
+
+guard 'rack', host: 'localhost', port: '9292' do
+  watch('Gemfile.lock')
+  watch('shorty.rb')
+  watch(%r{^(controllers|framework|models)/.*})
+end
