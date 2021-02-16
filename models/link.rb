@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require 'securerandom'
 require_relative 'stores'
 
 class Link
+  SHORTCODE_REGEX = /^[0-9a-zA-Z_]{6}$/.freeze
+
   class << self
     include Stores
 
@@ -33,19 +36,25 @@ class Link
     def stats(shortcode)
       url_info = load(shortcode)
 
-      url_info.delete('url')
+      url_info&.delete('url')
 
       url_info
+    end
+
+    def generate_shortcode!
+      code = SecureRandom.alphanumeric(6)
+
+      return generate_shortcode! if cache_store.exists?(code)
+
+      code
     end
 
     private
 
     def load(shortcode)
-      if cache_store.exists?(shortcode)
-        Marshal.load(cache_store.get(shortcode))
-      else
-        # load from DB.
-      end
+      return nil unless cache_store.exists?(shortcode)
+
+      Marshal.load(cache_store.get(shortcode))
     end
 
     def url_with_protocol(url)

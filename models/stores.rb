@@ -2,6 +2,6 @@
 
 module Stores
   def cache_store
-    @redis ||= Redis.new(host: 'localhost', port: 6379)
+    @cache_store ||= Redis.new(host: 'localhost', port: 6379)
   end
 end

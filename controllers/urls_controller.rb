@@ -4,13 +4,36 @@ require_relative 'base_controller'
 require_relative '../models/link'
 
 class UrlsController < BaseController
+  include Stores
+
   def create
-    key = params['shortcode']
+    shortcode = params['shortcode']
     url = params['url']
 
-    Link.create(key, url)
+    shortcode_used = cache_store.exists?(shortcode)
+    error_msg = nil
+    status    = 201
 
-    render status: 201, json: { message: 'created' }
+    if url.nil?
+      status = 400
+      error_msg = 'url is not present'
+    elsif shortcode_used
+      status = 409
+      error_msg = 'The the desired shortcode is already in use. Shortcodes are case-sensitive'
+    elsif shortcode && shortcode !~ Link::SHORTCODE_REGEX
+      status = 422
+      error_msg = 'The shortcode fails to meet the following regexp: ^[0-9a-zA-Z_]{4,}$.'
+    else
+      shortcode ||= Link.generate_shortcode!
+
+      Link.create(shortcode, url)
+    end
+
+    if error_msg
+      render status: status, json: { error: error_msg }
+    else
+      render status: 201, json: { shortcode: shortcode }
+    end
   end
 
   def show
@@ -26,6 +49,10 @@ class UrlsController < BaseController
   def stats
     stats = Link.stats(params['shortcode'])
 
-    render status: 200, json: stats
+    if stats
+      render status: 200, json: stats
+    else
+      render status: 404, json: { error: 'The shortcode cannot be found in the system' }
+    end
   end
 end
