@@ -10,7 +10,7 @@ class Link
       url_info = {
         'url' => url_with_protocol(url),
         'startDate' => Time.now,
-        'lastSeenDate' => Time.now,
+        'lastSeenDate' => nil,
         'redirectCount' => 0
       }
 
@@ -33,7 +33,7 @@ class Link
     def stats(shortcode)
       url_info = load(shortcode)
 
-      url_info.delete(:url)
+      url_info.delete('url')
 
       url_info
     end

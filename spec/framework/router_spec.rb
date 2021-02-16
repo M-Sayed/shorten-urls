@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'rack'
 require_relative '../../framework/router'
 
 RSpec.describe Router do
   subject { described_class.new(env) }
 
-  class TestController; end
+  class TestController
+  end
 
   before do
     routes = [
