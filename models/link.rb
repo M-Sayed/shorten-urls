@@ -18,6 +18,8 @@ class Link
       }
 
       cache_store.set(shortcode, Marshal.dump(url_info))
+      # possible to run the following in bg job.
+      db_store[:links].insert({ shortcode: shortcode }.merge(url_info))
     end
 
     def retrive_url(shortcode)
@@ -29,6 +31,12 @@ class Link
       url_info['lastSeenDate'] = Time.now
 
       cache_store.set(shortcode, Marshal.dump(url_info))
+      # possible to run the following in bg job.
+      db_store[:links].where(shortcode: shortcode)
+                      .update(
+                        'redirectCount' => url_info['redirectCount'],
+                        'lastSeenDate' => url_info['lastSeenDate']
+                      )
 
       url_info['url']
     end
@@ -52,9 +60,16 @@ class Link
     private
 
     def load(shortcode)
-      return nil unless cache_store.exists?(shortcode)
-
-      Marshal.load(cache_store.get(shortcode))
+      if cache_store.exists?(shortcode)
+        Marshal.load(cache_store.get(shortcode))
+      elsif link = db_store[:links].where(shortcode: shortcode).first
+        {
+          'url' => link[:url],
+          'startDate' => link[:startDate],
+          'lastSeenDate' => link[:lastSeenDate],
+          'redirectCount' => link[:redirectCount]
+        }
+      end
     end
 
     def url_with_protocol(url)

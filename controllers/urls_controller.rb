@@ -6,11 +6,13 @@ require_relative '../models/link'
 class UrlsController < BaseController
   include Stores
 
+  # TODO: move to a service object.
   def create
     shortcode = params['shortcode']
     url = params['url']
 
-    shortcode_used = cache_store.exists?(shortcode)
+    shortcode_used = cache_store.exists?(shortcode) ||
+                     db_store[:links].where(shortcode: shortcode).count.positive?
     error_msg = nil
     status    = 201
 
