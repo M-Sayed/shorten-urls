@@ -5,5 +5,5 @@ end
 guard 'rack', host: 'localhost', port: '9292' do
   watch('Gemfile.lock')
   watch('shorty.rb')
-  watch(%r{^(controllers|framework|models)/.*})
+  watch(%r{^(controllers|framework|models|commons)/.*})
 end

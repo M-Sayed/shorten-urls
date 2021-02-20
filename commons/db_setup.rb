@@ -14,14 +14,14 @@ if ::File.exist?(envfile)
   end
 end
 
-Database.configure({
-                     adapter: :postgres,
-                     user: ENV['DB_USERNAME'],
-                     password: ENV['DB_PASSWORD'],
-                     host: ENV['DB_HOST'],
-                     port: ENV['DB_PORT'],
-                     database: ENV['DB_NAME'],
-                     max_connections: 10
-                   })
+Database.configure(
+  adapter: :postgres,
+  user: ENV['DB_USERNAME'],
+  password: ENV['DB_PASSWORD'],
+  host: ENV['DB_HOST'],
+  port: ENV['DB_PORT'],
+  database: ENV['DB_NAME'],
+  max_connections: 10
+)
 
 Database.setup

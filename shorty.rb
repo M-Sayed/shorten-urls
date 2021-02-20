@@ -2,6 +2,8 @@
 
 require_relative 'controllers/urls_controller'
 require_relative 'framework/router'
+# make sure urls table is created, if not, create it.
+require_relative 'commons/db_setup'
 
 class Shorty
   class << self

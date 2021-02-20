@@ -5,7 +5,9 @@ require 'bundler/setup'
 require 'rack/env'
 require_relative 'shorty'
 
-Bundler.require(:default, :development)
+ENV['RACK_ENV'] ||= 'development'
+
+Bundler.require(:default, ENV['RACK_ENV'])
 
 use Rack::Env, envfile: ".env.#{ENV['RACK_ENV']}" unless ENV['RACK_ENV'] == 'production'
 

@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  shorty:
+    image: shorty
+    environment:
+      RACK_ENV: development
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 9292:9292
+    depends_on:
+      - redis
+      - psql_db
+  redis:
+    image: redis:6.0.10
+    ports:
+      - 6379:6379
+  psql_db:
+    build:
+      context: .
+      dockerfile: psql.Dockerfile
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql
+
+volumes:
+  db:
+  cache:

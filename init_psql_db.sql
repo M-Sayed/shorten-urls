@@ -1,0 +1,2 @@
+CREATE DATABASE shorty_database_development;
+CREATE DATABASE shorty_database_test;
