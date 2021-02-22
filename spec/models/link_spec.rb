@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative '../../models/link'
 
 RSpec.describe Link, :redis_required do
-  let(:redis) { Redis.new }
+  let(:redis) { Redis.new(host: ENV['REDIS_HOST'], port: ENV['REDIS_PORT']) }
   let(:url) { 'example.com' }
   let(:url_with_protocol) { "http://#{url}" }
   let(:shortcode) { 'short1' }

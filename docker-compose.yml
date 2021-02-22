@@ -3,8 +3,6 @@ version: '3.7'
 services:
   shorty:
     image: shorty
-    environment:
-      RACK_ENV: development
     build:
       context: .
       dockerfile: ./Dockerfile

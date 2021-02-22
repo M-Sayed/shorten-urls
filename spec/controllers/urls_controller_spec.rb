@@ -4,7 +4,7 @@ require 'spec_helper'
 require_relative '../../controllers/urls_controller'
 
 RSpec.describe UrlsController, :redis_required do
-  let(:redis) { Redis.new }
+  let(:redis) { Redis.new(host: ENV['REDIS_HOST'], port: ENV['REDIS_PORT']) }
   let(:response) { Struct.new(:status, :headers, :body).new(*subject) }
 
   describe 'create' do
